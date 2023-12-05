@@ -16,16 +16,29 @@ for line in assembly_file:
         line = line[:n].strip()
         if line[0] == "(":
             symbol_table[line.rstrip(")").lstrip("(")] = instruction_num
-            print (line)
         else:
             instruction_num += 1
-            print (line)
     elif n == -1 and line != "":
         if line[0] == "(":
             symbol_table[line.rstrip(")").lstrip("(")] = instruction_num
-            print (line)
         else:    
             instruction_num += 1
-            print (line) 
-print (symbol_table)                
+# the second pass
+    # adding variable symbols to the symbol table
+variable_address = 16 
+assembly_file = open(arguments[1], "r") 
+for line in assembly_file:
+    line = line.strip("\n")
+    n = line.find("//")
+    if n > 0 and line[0] == "@":
+        line = line[:n].strip().lstrip("@") 
+        if not line.isnumeric() and line not in symbol_table:
+            symbol_table[line] = variable_address 
+            variable_address += 1
+    elif n == -1 and line != "":
+        if line[0] == "@":
+            line = line.lstrip("@")
+            if not line.isnumeric() and line not in symbol_table:
+                symbol_table[line] = variable_address
+                variable_address += 1
 
